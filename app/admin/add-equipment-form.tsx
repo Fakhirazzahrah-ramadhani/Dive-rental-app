@@ -54,10 +54,19 @@ export default function AddEquipmentForm({ categories }: { categories: Category[
     setFeedback(null)
 
     const cleanCode = code.trim().toUpperCase()
-    if (cleanCode && !CODE_REGEX.test(cleanCode)) {
+
+    // Validasi wajib diisi
+    if (!cleanCode) {
+      setFeedback({ type: 'error', text: 'Kode alat wajib diisi.' })
+      return
+    }
+
+    // Validasi format karakter (alfanumerik & tanda hubung)
+    if (!CODE_REGEX.test(cleanCode)) {
       setFeedback({ type: 'error', text: CODE_RULE_TEXT })
       return
     }
+
     if (Number(price) < 0) {
       setFeedback({ type: 'error', text: 'Harga tidak boleh negatif.' })
       return
@@ -80,7 +89,7 @@ export default function AddEquipmentForm({ categories }: { categories: Category[
       .from('equipment')
       .insert({
         category_id: categoryId,
-        code: cleanCode, // kosong = dibuat otomatis oleh database
+        code: cleanCode,
         name: name.trim(),
         brand: brand.trim(),
         size: size.trim(),
@@ -133,7 +142,8 @@ export default function AddEquipmentForm({ categories }: { categories: Category[
           <input
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="Otomatis"
+            placeholder="Contoh: BCD-001"
+            required
             maxLength={30}
             className={`${inputClass} font-mono`}
           />
@@ -164,7 +174,7 @@ export default function AddEquipmentForm({ categories }: { categories: Category[
         </div>
       </div>
       <p className="mt-2 text-xs text-zinc-400">
-        Kode alat boleh dikosongkan, nanti dibuat otomatis dari kategori (contoh: WET-001). Kalau diisi sendiri, hanya huruf, angka, dan tanda hubung.
+        Kode alat wajib diisi manual. Hanya gunakan huruf, angka, dan tanda hubung (contoh: BCD-001).
       </p>
 
       <div className="mt-5 flex items-center gap-4 border-t border-zinc-100 pt-5">

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { Download } from 'lucide-react'
+import { Download, ClipboardCheck } from 'lucide-react'
 import { createClient } from '@/utils/supabase/server'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               Dive Rental
             </p>
             <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">
-              Panel Admin
+              <Link href="/admin">Panel Admin</Link>
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -44,6 +44,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Booking
+            </Link>
+            <Link
+              href="/admin/returns"
+              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <ClipboardCheck className="size-4" />
+              Inspeksi Pengembalian
             </Link>
             <Link
               href="/admin/finance"
