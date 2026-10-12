@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Search } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import CustomSelect from '../alat/[id]/custom-select'
+import AdminActionFeedback, { type AdminFeedback } from '../action-feedback'
 
 type Booking = {
   id: string
@@ -37,12 +39,30 @@ export default function BookingsTable({ bookings }: { bookings: Booking[] }) {
   const router = useRouter()
   const supabase = createClient()
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<AdminFeedback | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const normalizedSearch = searchQuery.trim().toLocaleLowerCase('id-ID')
+  const filteredBookings = normalizedSearch
+    ? bookings.filter((booking) => [
+      booking.customerName,
+      booking.customerPhone,
+      booking.id,
+      booking.itemsText,
+      statusOptions.find((option) => option.value === booking.status)?.label ?? booking.status,
+    ].some((value) => value.toLocaleLowerCase('id-ID').includes(normalizedSearch)))
+    : bookings
 
   async function updateStatus(id: string, status: string) {
     setBusyId(id)
+    setFeedback(null)
     const { error } = await supabase.from('bookings').update({ status }).eq('id', id)
     setBusyId(null)
-    if (error) alert('Gagal update status: ' + error.message)
+    if (error) {
+      setFeedback({ kind: 'error', message: `Gagal memperbarui status: ${error.message}` })
+      return
+    }
+    setFeedback({ kind: 'success', message: 'Status booking berhasil diperbarui.' })
     router.refresh()
   }
 
@@ -51,7 +71,84 @@ export default function BookingsTable({ bookings }: { bookings: Booking[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <>
+      <AdminActionFeedback feedback={feedback} onDismiss={() => setFeedback(null)} />
+      <div className="relative mb-4 max-w-md">
+        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" aria-hidden="true" />
+        <label htmlFor="booking-search" className="sr-only">Cari nama pelanggan atau booking</label>
+        <input
+          id="booking-search"
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder="Cari nama pelanggan, telepon, ID, atau alat"
+          className="h-10 w-full rounded-md border border-zinc-300 bg-white pl-9 pr-3 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-700 focus:ring-2 focus:ring-blue-700/15 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+        />
+      </div>
+      <div className="space-y-3 lg:hidden">
+        {filteredBookings.map((booking) => {
+          const expired = isExpired(booking)
+
+          return (
+            <article key={booking.id} className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="wrap-break-word font-semibold text-zinc-900 dark:text-white">{booking.customerName}</h3>
+                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{booking.customerPhone || 'Nomor telepon tidak tersedia'}</p>
+                </div>
+                <p className="shrink-0 text-right text-sm font-bold text-zinc-900 dark:text-white">
+                  Rp{Number(booking.totalPrice).toLocaleString('id-ID')}
+                  <span className="mt-0.5 block text-xs font-normal text-zinc-500">Total</span>
+                </p>
+              </div>
+
+              <div className="mt-4 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                <p className="mb-1 text-xs font-semibold text-zinc-500">Alat disewa</p>
+                <p className="wrap-break-word text-sm leading-5 text-zinc-800 dark:text-zinc-200">{booking.itemsText}</p>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-3 border-t border-zinc-100 pt-3 text-sm dark:border-zinc-800">
+                <div>
+                  <p className="text-xs font-medium text-zinc-500">Mulai</p>
+                  <p className="mt-0.5 font-medium text-zinc-800 dark:text-zinc-200">
+                    {new Date(booking.startDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-zinc-500">Selesai</p>
+                  <p className="mt-0.5 font-medium text-zinc-800 dark:text-zinc-200">
+                    {new Date(booking.endDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-3 flex items-center justify-between gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                <span className="text-xs font-semibold text-zinc-500">Status</span>
+                {expired ? (
+                  <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 dark:bg-red-900/40 dark:text-red-400">
+                    Kedaluwarsa
+                  </span>
+                ) : (
+                  <CustomSelect
+                    value={booking.status}
+                    options={statusOptions}
+                    onChange={(value) => updateStatus(booking.id, value)}
+                    disabled={busyId === booking.id}
+                    pillClassName={statusPillClass[booking.status]}
+                  />
+                )}
+              </div>
+            </article>
+          )
+        })}
+        {filteredBookings.length === 0 && (
+          <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900">
+            {bookings.length === 0 ? 'Belum ada booking.' : 'Tidak ada booking yang cocok.'}
+          </div>
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded-lg border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 lg:block">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
@@ -63,7 +160,7 @@ export default function BookingsTable({ bookings }: { bookings: Booking[] }) {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((b) => (
+          {filteredBookings.map((b) => (
             <tr key={b.id} className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/40">
               <td className="px-5 py-3">
                 <p className="font-medium text-zinc-900 dark:text-white">{b.customerName}</p>
@@ -94,11 +191,16 @@ export default function BookingsTable({ bookings }: { bookings: Booking[] }) {
               </td>
             </tr>
           ))}
-          {bookings.length === 0 && (
-            <tr><td colSpan={5} className="p-8 text-center text-sm text-zinc-400">Belum ada booking.</td></tr>
+          {filteredBookings.length === 0 && (
+            <tr>
+              <td colSpan={5} className="p-8 text-center text-sm text-zinc-400">
+                {bookings.length === 0 ? 'Belum ada booking.' : 'Tidak ada booking yang cocok.'}
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   )
 }

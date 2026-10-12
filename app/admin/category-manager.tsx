@@ -60,7 +60,7 @@ export default function CategoryManager({ categories }: { categories: Category[]
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-lg bg-blue-800 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-900 disabled:opacity-50"
         >
           {loading ? 'Menyimpan...' : 'Tambah Kategori'}
         </button>

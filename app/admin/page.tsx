@@ -15,18 +15,25 @@ export default async function AdminPage() {
 
   const { data: rawEquipment } = await supabase
     .from('equipment')
-    .select('id, name, brand, size, price_per_day, category_id, equipment_categories(name)')
-    .order('name')
+    .select('id, code, name, brand, size, price_per_day, category_id, image_url, equipment_categories(name), equipment_units(status)')
+    .order('code')
 
-  const equipment = (rawEquipment ?? []).map((item) => ({
-    id: item.id,
-    name: item.name,
-    brand: item.brand,
-    size: item.size,
-    price_per_day: item.price_per_day,
-    category_id: item.category_id,
-    category_name: (item.equipment_categories as unknown as { name: string } | null)?.name ?? '-',
-  }))
+  const equipment = (rawEquipment ?? []).map((item) => {
+    const units = (item.equipment_units as unknown as { status: string }[] | null) ?? []
+    return {
+      id: item.id,
+      code: item.code as string,
+      name: item.name,
+      brand: item.brand,
+      size: item.size,
+      price_per_day: item.price_per_day,
+      category_id: item.category_id,
+      category_name: (item.equipment_categories as unknown as { name: string } | null)?.name ?? '-',
+      image_url: item.image_url as string | null,
+      unit_total: units.length,
+      unit_available: units.filter((u) => u.status === 'tersedia').length,
+    }
+  })
 
   return (
     <div className="flex flex-col gap-10">
@@ -51,12 +58,8 @@ export default async function AdminPage() {
 function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
     <div className="mb-3">
-      <p className="text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-        {eyebrow}
-      </p>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-        {title}
-      </h2>
+      <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{eyebrow}</p>
+      <h2 className="text-lg font-semibold text-zinc-900">{title}</h2>
     </div>
   )
 }

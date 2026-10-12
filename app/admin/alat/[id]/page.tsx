@@ -28,7 +28,7 @@ export default async function EquipmentUnitsPage({ params }: { params: Promise<{
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <Link href="/admin" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+        <Link href="/admin" className="text-sm font-semibold text-blue-800 hover:underline dark:text-blue-300">
           ← Kembali ke Daftar Alat
         </Link>
         <p className="mt-3 text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">

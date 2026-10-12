@@ -104,7 +104,7 @@ export default function UnitsManager({ equipmentId, units }: { equipmentId: stri
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-lg bg-blue-800 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-900 disabled:opacity-50"
         >
           {loading ? 'Menyimpan...' : 'Tambah Unit'}
         </button>

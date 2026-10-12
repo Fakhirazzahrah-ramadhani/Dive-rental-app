@@ -69,45 +69,44 @@ export default async function HomePage({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      {/* NAVBAR — gaya konsisten dengan panel admin */}
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+    <div className="min-h-screen bg-[#f4f8fc]">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-800 text-white">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="5" r="2" />
                 <path d="M12 7v13M5 13c0-4 3-6 7-6s7 2 7 6" />
               </svg>
             </div>
-            <span className="font-[family-name:var(--font-heading)] text-lg font-extrabold text-zinc-900">
+            <span className="font-(family-name:--font-heading) text-lg font-extrabold tracking-tight text-zinc-900">
               Dive Rental
             </span>
           </div>
 
-          <nav className="flex items-center gap-2 sm:gap-3">
+          <nav aria-label="Navigasi utama" className="flex items-center gap-1 sm:gap-2">
             {profile?.role === 'admin' && (
-              <Link href="/admin" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-zinc-600 hover:bg-zinc-100 sm:block">
+              <Link href="/admin" className="hidden rounded-md px-3 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 sm:block">
                 Panel Admin
               </Link>
             )}
             {user && (
-              <Link href="/my-bookings" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-zinc-600 hover:bg-zinc-100 sm:block">
+              <Link href="/my-bookings" className="hidden rounded-md px-3 py-2 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 sm:block">
                 Booking Saya
               </Link>
             )}
             {user ? (
-              <div className="flex items-center gap-2 rounded-full bg-zinc-100 py-1 pl-1 pr-1.5">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+              <div className="flex min-w-0 items-center gap-2 rounded-full border border-zinc-200 bg-white py-1 pl-1 pr-1.5">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-800 text-xs font-bold text-white">
                   {(profile?.name ?? user.email ?? '?').charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden text-sm font-medium text-zinc-700 sm:inline">
+                <span className="hidden max-w-40 truncate text-sm font-medium text-zinc-700 sm:inline">
                   {profile?.name ?? user.email}
                 </span>
                 <LogoutButton />
               </div>
             ) : (
-              <Link href="/login" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-blue-700">
+              <Link href="/login" className="rounded-md bg-blue-800 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-900">
                 Masuk
               </Link>
             )}
@@ -116,40 +115,51 @@ export default async function HomePage({
 
         {/* nav mobile khusus, tampil di bawah bar utama saat layar sempit */}
         {(profile?.role === 'admin' || user) && (
-          <div className="flex gap-2 border-t border-zinc-100 px-4 py-2 sm:hidden">
+          <nav aria-label="Navigasi tambahan" className="flex gap-2 border-t border-zinc-100 px-4 py-2 sm:hidden">
             {profile?.role === 'admin' && (
-              <Link href="/admin" className="flex-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-center text-xs font-semibold text-zinc-600">
+              <Link href="/admin" className="flex-1 rounded-md bg-zinc-100 px-3 py-2 text-center text-xs font-semibold text-zinc-700">
                 Panel Admin
               </Link>
             )}
             {user && (
-              <Link href="/my-bookings" className="flex-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-center text-xs font-semibold text-zinc-600">
+              <Link href="/my-bookings" className="flex-1 rounded-md bg-zinc-100 px-3 py-2 text-center text-xs font-semibold text-zinc-700">
                 Booking Saya
               </Link>
             )}
-          </div>
+          </nav>
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="mb-6">
-          <h1 className="font-[family-name:var(--font-heading)] text-2xl font-extrabold text-zinc-900">
-            {user ? `Halo, ${profile?.name ?? 'Penyelam'} 👋` : 'Sewa Alat Selam'}
+      <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+        <div className="mb-7 border-b border-zinc-200 pb-6">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-blue-800">Dive Rental · Indonesia</p>
+          <h1 className="font-(family-name:--font-heading) text-2xl font-extrabold tracking-tight text-zinc-950 sm:text-3xl">
+            {user ? `Halo, ${profile?.name ?? 'Penyelam'}` : 'Perlengkapan untuk penyelaman berikutnya'}
           </h1>
-          <p className="text-sm text-zinc-500">Pilih tanggal, lihat ketersediaan, dan langsung booking.</p>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">Atur periode sewa untuk melihat ketersediaan, lalu tambahkan perlengkapan yang Anda butuhkan ke keranjang.</p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <div className="mb-6">
-              <DateFilter />
-            </div>
+        <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_300px] xl:gap-9">
+          <div className="min-w-0">
+            <DateFilter />
+            <section className="mt-8" aria-labelledby="catalog-title">
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Katalog</p>
+                  <h2 id="catalog-title" className="text-xl font-bold tracking-tight text-zinc-900">Pilih perlengkapan</h2>
+                </div>
+                <p className="text-sm text-zinc-500">{items.length} item</p>
+              </div>
             <CatalogGrid categories={categories ?? []} items={items} />
+            </section>
           </div>
 
-          <aside className="flex flex-col gap-4">
-            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-zinc-100">
-              <h2 className="mb-3 text-sm font-bold text-zinc-900">Booking Terakhir</h2>
+          <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
+            <section className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-5">
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <h2 className="text-sm font-bold text-zinc-900">Booking terakhir</h2>
+                {user && recentBookings.length > 0 && <Link href="/my-bookings" className="text-xs font-semibold text-blue-800 hover:underline">Semua</Link>}
+              </div>
               {!user ? (
                 <p className="text-sm text-zinc-400">Masuk untuk melihat riwayat booking kamu.</p>
               ) : recentBookings.length === 0 ? (
@@ -159,32 +169,29 @@ export default async function HomePage({
                   {recentBookings.map((b) => {
                     const s = statusLabel[b.status] ?? { label: b.status, className: 'bg-zinc-100 text-zinc-600' }
                     return (
-                      <Link key={b.id} href={`/booking/${b.id}`} className="flex items-center justify-between rounded-xl px-3 py-2.5 ring-1 ring-zinc-100 hover:bg-zinc-50">
+                      <Link key={b.id} href={`/booking/${b.id}`} className="flex min-w-0 items-center justify-between gap-2 rounded-md border border-zinc-200 px-3 py-2.5 transition hover:border-blue-700/40 hover:bg-zinc-50">
                         <div>
                           <p className="text-sm font-semibold text-zinc-900">#{b.id.slice(0, 8)}</p>
                           <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${s.className}`}>
                             {s.label}
                           </span>
                         </div>
-                        <p className="text-sm font-bold text-zinc-900">
+                        <p className="shrink-0 text-right text-sm font-bold text-zinc-900">
                           Rp{Number(b.total_price).toLocaleString('id-ID')}
                         </p>
                       </Link>
                     )
                   })}
-                  <Link href="/my-bookings" className="text-center text-sm font-semibold text-blue-600 hover:underline">
-                    Lihat semua →
-                  </Link>
                 </div>
               )}
-            </div>
+            </section>
 
-            <div className="rounded-2xl bg-blue-50 p-5 ring-1 ring-blue-100">
-              <h2 className="mb-1 text-sm font-bold text-blue-900">Butuh bantuan?</h2>
-              <p className="text-xs text-blue-700">
+            <section className="rounded-lg border border-blue-800/15 bg-blue-50 p-4 sm:p-5">
+              <h2 className="mb-1 text-sm font-bold text-blue-950">Butuh bantuan?</h2>
+              <p className="text-xs leading-5 text-blue-900/80">
                 Pilih tanggal dulu supaya ketersediaan alat yang ditampilkan akurat.
               </p>
-            </div>
+            </section>
           </aside>
         </div>
       </main>

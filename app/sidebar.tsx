@@ -23,7 +23,7 @@ export default function Sidebar({
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-zinc-100 bg-white px-4 py-6 lg:flex">
       <div className="mb-8 flex items-center gap-2 px-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-800 text-white">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="5" r="2" />
             <path d="M12 7v13M5 13c0-4 3-6 7-6s7 2 7 6" />
@@ -42,7 +42,7 @@ export default function Sidebar({
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                  active ? 'bg-blue-50 text-blue-700' : 'text-zinc-500 hover:bg-zinc-50'
+                  active ? 'bg-blue-50 text-blue-900' : 'text-zinc-500 hover:bg-zinc-50'
                 }`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -57,7 +57,7 @@ export default function Sidebar({
           <Link
             href="/admin"
             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-              pathname.startsWith('/admin') ? 'bg-blue-50 text-blue-700' : 'text-zinc-500 hover:bg-zinc-50'
+              pathname.startsWith('/admin') ? 'bg-blue-50 text-blue-900' : 'text-zinc-500 hover:bg-zinc-50'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -81,7 +81,7 @@ export default function Sidebar({
             <LogoutButton />
           </div>
         ) : (
-          <Link href="/login" className="block rounded-lg bg-blue-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-700">
+          <Link href="/login" className="block rounded-lg bg-blue-800 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-900">
             Masuk
           </Link>
         )}

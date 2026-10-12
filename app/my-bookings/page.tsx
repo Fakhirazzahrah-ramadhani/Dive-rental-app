@@ -27,9 +27,9 @@ export default async function MyBookingsPage() {
   const bookings = rawBookings ?? []
 
   return (
-    <div className="min-h-screen bg-zinc-50 px-6 py-8 dark:bg-zinc-950">
+    <div className="min-h-screen bg-[#f4f8fc] px-4 py-7 sm:px-6 sm:py-9">
       <div className="mx-auto max-w-3xl">
-        <Link href="/" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+        <Link href="/" className="text-sm font-semibold text-blue-800 hover:underline">
           ← Kembali ke katalog
         </Link>
         <h1 className="mb-6 mt-3 text-2xl font-semibold text-zinc-900 dark:text-white">
@@ -39,7 +39,7 @@ export default async function MyBookingsPage() {
         {bookings.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-10 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900">
             Kamu belum punya booking.{' '}
-            <Link href="/" className="text-blue-600 hover:underline dark:text-blue-400">Cari alat sekarang</Link>
+            <Link href="/" className="font-semibold text-blue-800 hover:underline">Cari alat sekarang</Link>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -57,7 +57,7 @@ export default async function MyBookingsPage() {
                 <Link
                   key={b.id}
                   href={`/booking/${b.id}`}
-                  className="flex items-center justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-blue-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-700"
+                  className="flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-blue-700/40 sm:p-5"
                 >
                   <div>
                     <div className="mb-1 flex items-center gap-2">

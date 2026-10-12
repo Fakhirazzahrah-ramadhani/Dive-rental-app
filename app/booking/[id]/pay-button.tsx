@@ -50,7 +50,7 @@ export default function PayButton({ bookingId }: { bookingId: string }) {
     <button
       onClick={handlePay}
       disabled={loading || !scriptReady}
-      className="w-full rounded-lg bg-blue-600 py-3 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+      className="min-h-11 w-full rounded-md bg-blue-800 px-4 text-sm font-bold text-white transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {loading ? 'Memproses...' : 'Bayar Sekarang'}
     </button>

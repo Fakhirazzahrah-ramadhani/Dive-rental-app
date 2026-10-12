@@ -1,23 +1,38 @@
 'use client'
 
+import { useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useCart } from './cart-context'
+
+const subscribe = () => () => {}
+const getMountedSnapshot = () => true
+const getServerSnapshot = () => false
 
 export default function FloatingCartButton() {
   const { items } = useCart()
+  const mounted = useSyncExternalStore(subscribe, getMountedSnapshot, getServerSnapshot)
   const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-  const totalQuantity = items.reduce((sum, i) => sum + i.quantity, 0)
+  const totalQuantity = mounted ? items.reduce((sum, i) => sum + i.quantity, 0) : 0
 
   // sembunyikan tombol ini di halaman keranjang itu sendiri, admin, dan login
   const hiddenOn = ['/cart', '/login']
   if (hiddenOn.includes(pathname) || pathname.startsWith('/admin')) return null
 
+  const cartParams = new URLSearchParams()
+  const start = searchParams.get('start')
+  const end = searchParams.get('end')
+  if (start) cartParams.set('start', start)
+  if (end) cartParams.set('end', end)
+  const cartQuery = cartParams.toString()
+
   return (
     <Link
-      href="/cart"
-      className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700 hover:scale-105"
+      href={cartQuery ? `/cart?${cartQuery}` : '/cart'}
+      className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-800 text-white shadow-lg transition hover:bg-blue-900 hover:scale-105"
       aria-label="Buka keranjang"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

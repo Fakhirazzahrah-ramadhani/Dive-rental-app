@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Notifikasi Booking
+
+Email dikirim melalui Resend jika `RESEND_API_KEY`, `NOTIFICATION_FROM_EMAIL`, dan `ADMIN_NOTIFICATION_EMAIL` tersedia. Email pelanggan memakai alamat akun yang login.
+
+WhatsApp menggunakan WhatsApp Cloud API. Atur `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ADMIN_TEMPLATE_NAME`, `WHATSAPP_CUSTOMER_TEMPLATE_NAME`, dan `ADMIN_WHATSAPP_TO`. Opsional: `WHATSAPP_GRAPH_API_VERSION` (default `v23.0`) dan `WHATSAPP_TEMPLATE_LANGUAGE` (default `id`).
+
+Template admin yang disetujui Meta harus memiliki parameter body berurutan: ID booking, nama pelanggan, telepon, daftar alat, periode, total. Template pelanggan: ID booking, daftar alat, periode, total. Pelanggan menerima WhatsApp ke nomor yang tersimpan di profilnya. Simpan semua kredensial hanya di environment server, jangan gunakan awalan `NEXT_PUBLIC_`.
+
 ## Getting Started
 
 First, run the development server:
